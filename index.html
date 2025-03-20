@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قائمة المهام</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .todo-container {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .todo-input {
+            width: 70%;
+            padding: 8px;
+            margin-right: 10px;
+        }
+        .todo-button {
+            padding: 8px 15px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .todo-button:hover {
+            background: #45a049;
+        }
+        .todo-list {
+            list-style: none;
+            padding: 0;
+        }
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .delete-btn {
+            margin-right: 10px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .delete-btn:hover {
+            background: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="todo-container">
+        <h2>قائمة المهام</h2>
+        <div>
+            <input type="text" class="todo-input" placeholder="أضف مهمة جديدة">
+            <button class="todo-button" onclick="addTodo()">إضافة</button>
+        </div>
+        <ul class="todo-list" id="todoList"></ul>
+    </div>
+
+    <script>
+        function addTodo() {
+            const input = document.querySelector('.todo-input');
+            const todoText = input.value.trim();
+
+            if (todoText !== '') {
+                const todoList = document.getElementById('todoList');
+                const li = document.createElement('li');
+                li.className = 'todo-item';
+
+                li.innerHTML = `
+                    <button class="delete-btn" onclick="this.parentElement.remove()">حذف</button>
+                    <span>${todoText}</span>
+                `;
+
+                todoList.appendChild(li);
+                input.value = '';
+            }
+        }
+
+        // إضافة المهمة بالضغط على Enter
+        document.querySelector('.todo-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addTodo();
+            }
+        });
+    </script>
+</body>
+</html>
