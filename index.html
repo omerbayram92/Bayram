@@ -3,93 +3,549 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>قائمة المهام</title>
+    <title>مكتبة البرومتات العربية | تصميم عصري بسيط</title>
     <style>
+        :root {
+            color-scheme: light;
+            --bg: #f5f7ff;
+            --surface: rgba(255, 255, 255, 0.92);
+            --text: #1d2433;
+            --accent: #5850ec;
+            --accent-soft: rgba(88, 80, 236, 0.12);
+            --accent-strong: #4338ca;
+            --muted: #6b7280;
+            --shadow: 0 18px 36px rgba(17, 24, 39, 0.16);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
+            margin: 0;
+            font-family: "Cairo", "Segoe UI", Tahoma, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
         }
-        .todo-container {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 5px;
+
+        header {
+            position: relative;
+            padding: 32px 24px 120px;
+            background: linear-gradient(145deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+            color: #fff;
+            overflow: hidden;
         }
-        .todo-input {
-            width: 70%;
-            padding: 8px;
-            margin-right: 10px;
+
+        header::before,
+        header::after {
+            content: "";
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.35), transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float 12s ease-in-out infinite;
         }
-        .todo-button {
-            padding: 8px 15px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
+
+        header::before {
+            top: -220px;
+            right: -120px;
         }
-        .todo-button:hover {
-            background: #45a049;
+
+        header::after {
+            bottom: -240px;
+            left: -140px;
+            animation-delay: -6s;
         }
-        .todo-list {
-            list-style: none;
-            padding: 0;
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-24px) scale(1.05); }
         }
-        .todo-item {
+
+        nav {
+            position: relative;
+            z-index: 1;
             display: flex;
             align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+            justify-content: space-between;
+            max-width: 1100px;
+            margin: 0 auto 36px;
         }
-        .delete-btn {
-            margin-right: 10px;
-            background: #ff4444;
-            color: white;
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.14);
+            backdrop-filter: blur(4px);
+        }
+
+        nav a {
+            color: rgba(255,255,255,0.82);
+            text-decoration: none;
+            font-size: 0.98rem;
+            margin-inline-start: 18px;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: #fff;
+        }
+
+        .hero {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 36px;
+        }
+
+        .hero-text {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(2.3rem, 5vw, 3.3rem);
+            letter-spacing: 0.4px;
+        }
+
+        .hero-text p {
+            font-size: 1.05rem;
+            opacity: 0.9;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 12px;
+            background: rgba(255,255,255,0.15);
+            padding: 14px;
+            border-radius: 18px;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 28px 50px rgba(15, 23, 42, 0.22);
+        }
+
+        .search-box input {
+            flex: 1;
             border: none;
-            padding: 5px 10px;
-            cursor: pointer;
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.9);
+            color: #1f2937;
+            outline: none;
         }
-        .delete-btn:hover {
-            background: #cc0000;
+
+        .search-box button {
+            padding: 0 26px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            background: #fbbf24;
+            color: #1f2937;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .search-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 22px rgba(251, 191, 36, 0.35);
+        }
+
+        .hero-card {
+            padding: 24px;
+            border-radius: 22px;
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.25);
+            display: grid;
+            gap: 16px;
+            align-content: start;
+        }
+
+        .hero-card span {
+            font-size: 2.2rem;
+        }
+
+        .hero-card small {
+            color: rgba(255,255,255,0.75);
+        }
+
+        main {
+            max-width: 1100px;
+            margin: -70px auto 80px;
+            padding: 0 24px;
+        }
+
+        section {
+            margin-top: 70px;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .section-heading h2 {
+            margin: 0;
+            font-size: 1.7rem;
+        }
+
+        .section-heading a {
+            font-size: 0.9rem;
+            color: var(--accent);
+            text-decoration: none;
+            background: var(--accent-soft);
+            padding: 8px 16px;
+            border-radius: 999px;
+        }
+
+        .grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .category-grid {
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        }
+
+        .category-card,
+        .prompt-card,
+        .step {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 22px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(88, 80, 236, 0.08);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .category-card:hover,
+        .prompt-card:hover,
+        .step:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 22px 40px rgba(15, 23, 42, 0.18);
+        }
+
+        .category-card h3,
+        .prompt-card h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.15rem;
+        }
+
+        .category-card p,
+        .prompt-card p,
+        .step p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+
+        .category-icon {
+            font-size: 1.7rem;
+            margin-bottom: 12px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: var(--accent-strong);
+            margin-top: 14px;
+        }
+
+        .prompt-meta {
+            margin-top: 18px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .steps-grid {
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            background: var(--accent-soft);
+            color: var(--accent-strong);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .cta {
+            margin-top: 100px;
+            padding: 36px;
+            background: linear-gradient(125deg, rgba(99,102,241,0.12), rgba(236,72,153,0.15));
+            border-radius: 26px;
+            text-align: center;
+            box-shadow: 0 24px 46px rgba(124, 58, 237, 0.18);
+        }
+
+        .cta h3 {
+            margin-top: 0;
+            font-size: 1.8rem;
+        }
+
+        .cta p {
+            color: var(--muted);
+            margin-bottom: 24px;
+        }
+
+        .cta a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 26px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .cta a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 30px rgba(88, 80, 236, 0.35);
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            padding: 48px 24px 60px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 640px) {
+            header {
+                padding: 26px 18px 110px;
+            }
+
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            nav a {
+                margin-inline-start: 0;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .search-box button {
+                width: 100%;
+                padding: 14px;
+            }
+
+            .section-heading {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="todo-container">
-        <h2>قائمة المهام</h2>
-        <div>
-            <input type="text" class="todo-input" placeholder="أضف مهمة جديدة">
-            <button class="todo-button" onclick="addTodo()">إضافة</button>
+    <header>
+        <nav>
+            <div class="logo"><span>⚡</span> مكتبة البرومتات العربية</div>
+            <div>
+                <a href="#categories">الأقسام</a>
+                <a href="#prompts">أبرز البرومتات</a>
+                <a href="#guide">طريقة الاستخدام</a>
+            </div>
+        </nav>
+
+        <div class="hero">
+            <div class="hero-text">
+                <h1>إلهام فوري لصناعة المحتوى العربي</h1>
+                <p>استكشف مكتبة منظمة من البرومتات العربية المصممة بعناية لتسريع أعمال الكتابة، التسويق، التعليم، والبرمجة مع تجربة حديثة وبسيطة.</p>
+                <div class="search-box">
+                    <input type="search" placeholder="ابحث عن برومت حسب المجال أو النبرة...">
+                    <button type="button">بحث فوري</button>
+                </div>
+            </div>
+            <div class="hero-card">
+                <span>✨</span>
+                <h2>لماذا البرومتات العربية؟</h2>
+                <p>الموقع يوفر لك محتوى جاهزًا بلغتك مع قابلية تخصيص سريعة لتطلق مشروعك بثقة وتستثمر وقتك في التنفيذ.</p>
+                <small>تحديث أسبوعي + توصيات من المجتمع</small>
+            </div>
         </div>
-        <ul class="todo-list" id="todoList"></ul>
-    </div>
+    </header>
 
-    <script>
-        function addTodo() {
-            const input = document.querySelector('.todo-input');
-            const todoText = input.value.trim();
+    <main>
+        <section id="categories">
+            <div class="section-heading">
+                <h2>أقسام مختارة تلائم احتياجاتك</h2>
+                <a href="#guide">دليل البدء السريع</a>
+            </div>
+            <div class="grid category-grid">
+                <article class="category-card">
+                    <div class="category-icon">📝</div>
+                    <h3>كتابة المحتوى</h3>
+                    <p>حوّل الأفكار إلى مقالات مدونات، منشورات منصات اجتماعية، ونشرات بريدية مقنعة.</p>
+                    <span class="badge">+30 برومت متجدّد</span>
+                </article>
+                <article class="category-card">
+                    <div class="category-icon">📣</div>
+                    <h3>التسويق والإعلانات</h3>
+                    <p>ابنِ حملات تسويق متكاملة مع نصوص إبداعية ورسائل تستهدف جمهورك بدقة.</p>
+                    <span class="badge">+22 نموذج جاهز</span>
+                </article>
+                <article class="category-card">
+                    <div class="category-icon">💻</div>
+                    <h3>البرمجة والتطوير</h3>
+                    <p>اطلب مراجعات للكود، خطط مشاريع، أو أتمتة مهام برمجية بخطوات واضحة.</p>
+                    <span class="badge">+18 وصفة تقنية</span>
+                </article>
+                <article class="category-card">
+                    <div class="category-icon">🎓</div>
+                    <h3>التعليم والتدريب</h3>
+                    <p>صمّم محتوى تعليميًا، أنشطة صفية، واختبارات تقييمية تلهم المتعلمين.</p>
+                    <span class="badge">+27 دليل تدريبي</span>
+                </article>
+                <article class="category-card">
+                    <div class="category-icon">🎨</div>
+                    <h3>التصميم والإبداع</h3>
+                    <p>انطلق ببرومتات تحفّز توليد الصور والرسومات وتحدد الهوية البصرية.</p>
+                    <span class="badge">+15 فكرة فنية</span>
+                </article>
+            </div>
+        </section>
 
-            if (todoText !== '') {
-                const todoList = document.getElementById('todoList');
-                const li = document.createElement('li');
-                li.className = 'todo-item';
+        <section id="prompts">
+            <div class="section-heading">
+                <h2>أبرز البرومتات الجاهزة</h2>
+                <a href="#cta">جرّب الحزمة الكاملة</a>
+            </div>
+            <div class="grid category-grid">
+                <article class="prompt-card">
+                    <h3>سيناريو إطلاق منتج مبتكر</h3>
+                    <p>"أعد صياغة حملة إطلاق منتج تقني موجهة لجيل زد مع خطة محتوى أسبوعية ورسائل بريدية محفزة على الاشتراك المبكر."</p>
+                    <div class="prompt-meta">
+                        <span class="badge">تسويق</span>
+                        <span>مدة التنفيذ: 10 دقائق</span>
+                    </div>
+                </article>
+                <article class="prompt-card">
+                    <h3>مدرب كتابة المقالات الطويلة</h3>
+                    <p>"ساعدني في كتابة مقال تحليلي من 1500 كلمة حول التحول الرقمي في المنطقة العربية مع اقتراح مصادر داعمة."</p>
+                    <div class="prompt-meta">
+                        <span class="badge">كتابة المحتوى</span>
+                        <span>درجة التفصيل: عالية</span>
+                    </div>
+                </article>
+                <article class="prompt-card">
+                    <h3>مساعد المبرمج الذكي</h3>
+                    <p>"راجع كود بايثون، اقترح تحسينات في الأداء، ثم اكتب اختبارات وحدات ووضح كيفية دمجها في CI/CD."</p>
+                    <div class="prompt-meta">
+                        <span class="badge">برمجة</span>
+                        <span>المهارة المطلوبة: متوسطة</span>
+                    </div>
+                </article>
+                <article class="prompt-card">
+                    <h3>مصمم تجربة المستخدم الافتراضي</h3>
+                    <p>"أنشئ رحلة مستخدم لتطبيق توصيل، حدد نقاط الألم والحلول المقترحة، وصِف ثلاث شاشات رئيسية."</p>
+                    <div class="prompt-meta">
+                        <span class="badge">تصميم</span>
+                        <span>متوافق مع Figma</span>
+                    </div>
+                </article>
+                <article class="prompt-card">
+                    <h3>منهج مكثف لورشة تعليمية</h3>
+                    <p>"صمّم ورشة عمل لمدة يومين حول مهارات العرض تتضمن الأهداف، الأنشطة، والمواد المطلوبة لكل جلسة."</p>
+                    <div class="prompt-meta">
+                        <span class="badge">تعليم</span>
+                        <span>مع مخطط زمني جاهز</span>
+                    </div>
+                </article>
+                <article class="prompt-card">
+                    <h3>مُحفّز السرد القصصي</h3>
+                    <p>"طوّر حبكة لقصة خيالية في مدينة مستقبلية مع وصف أبطال القصة، الدوافع، ونهاية مفتوحة تشجّع على جزء ثانٍ."</p>
+                    <div class="prompt-meta">
+                        <span class="badge">إبداعي</span>
+                        <span>مستوى الخيال: مرتفع</span>
+                    </div>
+                </article>
+            </div>
+        </section>
 
-                li.innerHTML = `
-                    <button class="delete-btn" onclick="this.parentElement.remove()">حذف</button>
-                    <span>${todoText}</span>
-                `;
+        <section id="guide">
+            <div class="section-heading">
+                <h2>كيف تستخدم البرومتات بأفضل صورة؟</h2>
+                <a href="#cta">احصل على التحديثات</a>
+            </div>
+            <div class="grid steps-grid">
+                <article class="step">
+                    <div class="step-number">١</div>
+                    <h3>حدّد الهدف والجمهور</h3>
+                    <p>اكتب وصفًا واضحًا لنتيجة البرومت، الفئة المستهدفة، والنبرة المطلوبة قبل نسخ البرومت.</p>
+                </article>
+                <article class="step">
+                    <div class="step-number">٢</div>
+                    <h3>أضف التفاصيل والسياق</h3>
+                    <p>أدرج أمثلة، بيانات واقعية، أو قيودًا معينة تساعد الذكاء الاصطناعي على تخصيص المخرجات لك.</p>
+                </article>
+                <article class="step">
+                    <div class="step-number">٣</div>
+                    <h3>اختبر وعدّل</h3>
+                    <p>جرّب البرومت على مراحل، عدّل الأسئلة، واطلب تحسينات أو تلخيصات للوصول لأفضل نتيجة.</p>
+                </article>
+                <article class="step">
+                    <div class="step-number">٤</div>
+                    <h3>شارك ملاحظاتك</h3>
+                    <p>أخبرنا بما نجح معك لتحصل على توصيات مخصصة وتطويرات في الإصدارات القادمة.</p>
+                </article>
+            </div>
+        </section>
 
-                todoList.appendChild(li);
-                input.value = '';
-            }
-        }
+        <section id="cta" class="cta">
+            <h3>حمل مجموعة البرومتات الكاملة</h3>
+            <p>انضم إلى مجتمع صناع المحتوى العرب لتحصل على تحديثات أسبوعية، قوائم جاهزة، وأفكار مبتكرة تدعم مشاريعك.</p>
+            <a href="mailto:hello@example.com?subject=طلب%20الوصول%20إلى%20مكتبة%20البرومتات">اطلب الرابط النهائي للمكتبة ↗</a>
+        </section>
+    </main>
 
-        // إضافة المهمة بالضغط على Enter
-        document.querySelector('.todo-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                addTodo();
-            }
-        });
-    </script>
+    <footer>
+        صُمّم الموقع بتجربة عصرية وبسيطة مع لمسات حركية خفيفة، والملف النهائي متاح عبر <strong>index.html</strong>. تابعنا لإطلاق النسخة المتقدمة قريبًا.
+    </footer>
 </body>
 </html>
