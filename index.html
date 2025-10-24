@@ -3,93 +3,620 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>قائمة المهام</title>
+    <title>لعبة تشريح القصبات الهوائية - FOB</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-        .todo-container {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 5px;
-        }
-        .todo-input {
-            width: 70%;
-            padding: 8px;
-            margin-right: 10px;
-        }
-        .todo-button {
-            padding: 8px 15px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .todo-button:hover {
-            background: #45a049;
-        }
-        .todo-list {
-            list-style: none;
+        * {
+            margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
-        .todo-item {
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .score-board {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        .delete-btn {
-            margin-right: 10px;
-            background: #ff4444;
+            background: #3498db;
             color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
         }
-        .delete-btn:hover {
-            background: #cc0000;
+
+        .question-container {
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .options-container {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+            position: relative;
+        }
+
+        .option:hover {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .option.selected {
+            background: #bbdefb;
+            border-color: #2196f3;
+        }
+
+        .option.correct {
+            background: #c8e6c9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        .option.incorrect {
+            background: #ffcdd2;
+            border-color: #f44336;
+            color: #c62828;
+        }
+
+        .option-letter {
+            background: #2196f3;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            font-weight: bold;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .result-container {
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .result-title {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .result-score {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .anatomy-diagram {
+            background: #fff;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .diagram-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .bronchial-tree {
+            font-family: monospace;
+            font-size: 0.9em;
+            line-height: 1.8;
+            color: #34495e;
+            text-align: right;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            transition: width 0.3s ease;
+        }
+
+        .explanation {
+            background: #e8f5e8;
+            border-right: 4px solid #27ae60;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .explanation-title {
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .score-board {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="todo-container">
-        <h2>قائمة المهام</h2>
-        <div>
-            <input type="text" class="todo-input" placeholder="أضف مهمة جديدة">
-            <button class="todo-button" onclick="addTodo()">إضافة</button>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 لعبة تشريح القصبات الهوائية</h1>
+            <p>تعلم تشريح القصبات الهوائية بالتفصيل لعمليات التنظير الشعبي (FOB)</p>
         </div>
-        <ul class="todo-list" id="todoList"></ul>
+
+        <div class="game-container">
+            <div class="score-board">
+                <div>النتيجة: <span id="score">0</span></div>
+                <div>السؤال: <span id="currentQuestion">1</span> من <span id="totalQuestions">10</span></div>
+                <div>التقدم: <span id="progress">10%</span></div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+
+            <div id="gameArea">
+                <div class="question-container">
+                    <div class="question-number" id="questionNumber">السؤال 1</div>
+                    <div class="question-text" id="questionText">جاري تحميل السؤال...</div>
+                    
+                    <div class="anatomy-diagram" id="anatomyDiagram" style="display: none;">
+                        <div class="diagram-title">رسم توضيحي للقصبات الهوائية</div>
+                        <div class="bronchial-tree" id="bronchialTree"></div>
+                    </div>
+                    
+                    <div class="options-container" id="optionsContainer">
+                        <!-- الخيارات ستُضاف ديناميكياً -->
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>التالي</button>
+                    <button class="btn btn-secondary" id="restartBtn" onclick="restartGame()">إعادة البدء</button>
+                </div>
+            </div>
+
+            <div id="resultArea" style="display: none;">
+                <div class="result-container">
+                    <div class="result-title" id="resultTitle">🎉 مبروك!</div>
+                    <div class="result-score" id="resultScore">لقد حصلت على 8/10</div>
+                    <div id="resultMessage">أداء ممتاز في تعلم تشريح القصبات الهوائية!</div>
+                    <button class="btn btn-primary" onclick="restartGame()" style="margin-top: 20px;">لعب مرة أخرى</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        function addTodo() {
-            const input = document.querySelector('.todo-input');
-            const todoText = input.value.trim();
-
-            if (todoText !== '') {
-                const todoList = document.getElementById('todoList');
-                const li = document.createElement('li');
-                li.className = 'todo-item';
-
-                li.innerHTML = `
-                    <button class="delete-btn" onclick="this.parentElement.remove()">حذف</button>
-                    <span>${todoText}</span>
-                `;
-
-                todoList.appendChild(li);
-                input.value = '';
+        // قاعدة بيانات الأسئلة الشاملة لتشريح القصبات الهوائية
+        const questions = [
+            {
+                question: "أي من القصبات التالية هي القصبة الرئيسية اليمنى؟",
+                options: [
+                    "القصبة الرئيسية اليمنى",
+                    "القصبة الرئيسية اليسرى", 
+                    "القصبة القصية",
+                    "القصبة المتوسطة"
+                ],
+                correct: 0,
+                explanation: "القصبة الرئيسية اليمنى هي القصبة الأكبر والأقصر، وتنقسم إلى ثلاثة فصوص رئيسية.",
+                diagram: "القصبة الرئيسية اليمنى\n├── القصبة الفصية العلوية اليمنى\n├── القصبة الفصية الوسطى اليمنى\n└── القصبة الفصية السفلية اليمنى"
+            },
+            {
+                question: "كم عدد الفصوص في الرئة اليمنى؟",
+                options: ["2 فصوص", "3 فصوص", "4 فصوص", "5 فصوص"],
+                correct: 1,
+                explanation: "الرئة اليمنى تحتوي على 3 فصوص: العلوي، الأوسط، والسفلي.",
+                diagram: "الرئة اليمنى\n├── الفص العلوي\n├── الفص الأوسط\n└── الفص السفلي"
+            },
+            {
+                question: "أي من القصبات التالية تخدم الفص الأوسط في الرئة اليمنى؟",
+                options: [
+                    "القصبة الفصية العلوية اليمنى",
+                    "القصبة الفصية الوسطى اليمنى",
+                    "القصبة الفصية السفلية اليمنى",
+                    "القصبة الرئيسية اليسرى"
+                ],
+                correct: 1,
+                explanation: "القصبة الفصية الوسطى اليمنى تخدم الفص الأوسط في الرئة اليمنى حصرياً.",
+                diagram: "القصبة الفصية الوسطى اليمنى\n└── الفص الأوسط (الرئة اليمنى)"
+            },
+            {
+                question: "ما هو اسم القصبة التي تخدم الفص السفلي في الرئة اليسرى؟",
+                options: [
+                    "القصبة الفصية السفلية اليمنى",
+                    "القصبة الفصية السفلية اليسرى",
+                    "القصبة الفصية العلوية اليسرى",
+                    "القصبة الرئيسية اليسرى"
+                ],
+                correct: 1,
+                explanation: "القصبة الفصية السفلية اليسرى تخدم الفص السفلي في الرئة اليسرى.",
+                diagram: "الرئة اليسرى\n├── الفص العلوي\n└── الفص السفلي (القصبة الفصية السفلية اليسرى)"
+            },
+            {
+                question: "أي من القصبات التالية هي الأقصر والأوسع؟",
+                options: [
+                    "القصبة الرئيسية اليسرى",
+                    "القصبة الرئيسية اليمنى",
+                    "القصبة القصية",
+                    "القصبة الفصية العلوية اليمنى"
+                ],
+                correct: 1,
+                explanation: "القصبة الرئيسية اليمنى أقصر وأوسع من اليسرى، مما يجعلها أكثر عرضة لاستنشاق الأجسام الغريبة.",
+                diagram: "القصبة الرئيسية اليمنى (أقصر وأوسع)\n└── تنقسم إلى 3 فصوص\n\nالقصبة الرئيسية اليسرى (أطول وأضيق)\n└── تنقسم إلى 2 فصوص"
+            },
+            {
+                question: "كم عدد القصبات القطاعية في الرئة اليمنى؟",
+                options: ["8 قصبات", "10 قصبات", "12 قصبات", "14 قصبات"],
+                correct: 1,
+                explanation: "الرئة اليمنى تحتوي على 10 قصبات قطاعية: 3 في الفص العلوي، 2 في الفص الأوسط، و5 في الفص السفلي.",
+                diagram: "الرئة اليمنى - القصبات القطاعية\nالفص العلوي: 3 قصبات\nالفص الأوسط: 2 قصبات\nالفص السفلي: 5 قصبات\nالمجموع: 10 قصبات"
+            },
+            {
+                question: "أي من القصبات التالية تخدم القطعة العلوية من الفص السفلي في الرئة اليمنى؟",
+                options: [
+                    "القطعة العلوية (S6)",
+                    "القطعة الوسطى (S7)",
+                    "القطعة السفلية (S8)",
+                    "القطعة القاعدية (S9)"
+                ],
+                correct: 0,
+                explanation: "القطعة العلوية من الفص السفلي في الرئة اليمنى تُعرف بـ S6 وتُخدم بواسطة القصبة القطاعية S6.",
+                diagram: "الفص السفلي اليمنى\n├── S6 (القطعة العلوية)\n├── S7 (القطعة الوسطى)\n├── S8 (القطعة السفلية)\n├── S9 (القطعة القاعدية الأمامية)\n└── S10 (القطعة القاعدية الخلفية)"
+            },
+            {
+                question: "ما هو اسم القصبة التي تخدم الفص اللساني في الرئة اليسرى؟",
+                options: [
+                    "القصبة الفصية العلوية اليسرى",
+                    "القصبة الفصية السفلية اليسرى",
+                    "القصبة اللسانية",
+                    "القصبة الرئيسية اليسرى"
+                ],
+                correct: 2,
+                explanation: "الفص اللساني في الرئة اليسرى يُخدم بواسطة القصبة اللسانية، وهي جزء من القصبة الفصية العلوية اليسرى.",
+                diagram: "الرئة اليسرى\n├── الفص العلوي\n│   ├── القطعة العلوية\n│   └── الفص اللساني (القصبة اللسانية)\n└── الفص السفلي"
+            },
+            {
+                question: "أي من القصبات التالية هي الأكثر عرضة لاستنشاق الأجسام الغريبة؟",
+                options: [
+                    "القصبة الرئيسية اليسرى",
+                    "القصبة الرئيسية اليمنى",
+                    "القصبة الفصية العلوية اليمنى",
+                    "القصبة الفصية السفلية اليسرى"
+                ],
+                correct: 1,
+                explanation: "القصبة الرئيسية اليمنى أكثر عرضة لاستنشاق الأجسام الغريبة لأنها أقصر وأوسع وأكثر استقامة من اليسرى.",
+                diagram: "مسار الأجسام الغريبة\nالقصبة القصية\n└── القصبة الرئيسية اليمنى (أكثر عرضة)\n    └── الفص السفلي اليمنى (الموقع الأكثر شيوعاً)"
+            },
+            {
+                question: "ما هو اسم القصبة التي تخدم القطعة القاعدية الخلفية في الرئة اليمنى؟",
+                options: [
+                    "S6",
+                    "S7", 
+                    "S8",
+                    "S10"
+                ],
+                correct: 3,
+                explanation: "القطعة القاعدية الخلفية في الرئة اليمنى تُعرف بـ S10 وتُخدم بواسطة القصبة القطاعية S10.",
+                diagram: "الفص السفلي اليمنى - القطاعات\n├── S6 (العلوية)\n├── S7 (الوسطى)\n├── S8 (السفلية)\n├── S9 (القاعدية الأمامية)\n└── S10 (القاعدية الخلفية)"
             }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let selectedAnswer = null;
+        let gameCompleted = false;
+
+        // تهيئة اللعبة
+        function initGame() {
+            currentQuestionIndex = 0;
+            score = 0;
+            selectedAnswer = null;
+            gameCompleted = false;
+            
+            document.getElementById('gameArea').style.display = 'block';
+            document.getElementById('resultArea').style.display = 'none';
+            
+            loadQuestion();
         }
 
-        // إضافة المهمة بالضغط على Enter
-        document.querySelector('.todo-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                addTodo();
+        // تحميل السؤال الحالي
+        function loadQuestion() {
+            const question = questions[currentQuestionIndex];
+            
+            // تحديث معلومات السؤال
+            document.getElementById('questionNumber').textContent = `السؤال ${currentQuestionIndex + 1}`;
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            document.getElementById('totalQuestions').textContent = questions.length;
+            
+            // تحديث التقدم
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            document.getElementById('progress').textContent = Math.round(progress) + '%';
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            // إنشاء الخيارات
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.innerHTML = `
+                    <span class="option-letter">${String.fromCharCode(65 + index)}</span>
+                    ${option}
+                `;
+                optionElement.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // إظهار الرسم التوضيحي إذا كان متوفراً
+            if (question.diagram) {
+                document.getElementById('bronchialTree').textContent = question.diagram;
+                document.getElementById('anatomyDiagram').style.display = 'block';
+            } else {
+                document.getElementById('anatomyDiagram').style.display = 'none';
             }
-        });
+            
+            // إعادة تعيين حالة الأزرار
+            document.getElementById('nextBtn').disabled = true;
+            selectedAnswer = null;
+        }
+
+        // اختيار إجابة
+        function selectAnswer(answerIndex) {
+            if (gameCompleted) return;
+            
+            selectedAnswer = answerIndex;
+            
+            // إزالة التحديد السابق
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // تحديد الإجابة المختارة
+            document.querySelectorAll('.option')[answerIndex].classList.add('selected');
+            
+            // تفعيل زر التالي
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        // الانتقال للسؤال التالي
+        function nextQuestion() {
+            if (selectedAnswer === null) return;
+            
+            const question = questions[currentQuestionIndex];
+            const isCorrect = selectedAnswer === question.correct;
+            
+            if (isCorrect) {
+                score++;
+            }
+            
+            // إظهار النتيجة
+            showAnswerResult(question, selectedAnswer, isCorrect);
+            
+            // الانتقال للسؤال التالي أو إنهاء اللعبة
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    loadQuestion();
+                } else {
+                    endGame();
+                }
+            }, 3000);
+        }
+
+        // إظهار نتيجة الإجابة
+        function showAnswerResult(question, selectedAnswer, isCorrect) {
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach((option, index) => {
+                option.onclick = null; // منع النقر
+                
+                if (index === question.correct) {
+                    option.classList.add('correct');
+                } else if (index === selectedAnswer && !isCorrect) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            // إظهار الشرح
+            const explanation = document.createElement('div');
+            explanation.className = 'explanation';
+            explanation.innerHTML = `
+                <div class="explanation-title">${isCorrect ? '✅ إجابة صحيحة!' : '❌ إجابة خاطئة'}</div>
+                ${question.explanation}
+            `;
+            
+            document.getElementById('questionContainer').appendChild(explanation);
+            
+            // تحديث النتيجة
+            document.getElementById('score').textContent = score;
+        }
+
+        // إنهاء اللعبة
+        function endGame() {
+            gameCompleted = true;
+            
+            document.getElementById('gameArea').style.display = 'none';
+            document.getElementById('resultArea').style.display = 'block';
+            
+            const percentage = Math.round((score / questions.length) * 100);
+            document.getElementById('resultScore').textContent = `لقد حصلت على ${score}/${questions.length} (${percentage}%)`;
+            
+            let message = '';
+            if (percentage >= 90) {
+                message = '🎉 أداء ممتاز! أنت خبير في تشريح القصبات الهوائية!';
+            } else if (percentage >= 80) {
+                message = '👏 أداء جيد جداً! لديك فهم ممتاز لتشريح القصبات الهوائية!';
+            } else if (percentage >= 70) {
+                message = '👍 أداء جيد! استمر في التعلم لتحسين معرفتك!';
+            } else if (percentage >= 60) {
+                message = '📚 أداء مقبول! راجع المعلومات واعيد المحاولة!';
+            } else {
+                message = '💪 لا تستسلم! استمر في التعلم والمراجعة!';
+            }
+            
+            document.getElementById('resultMessage').textContent = message;
+        }
+
+        // إعادة بدء اللعبة
+        function restartGame() {
+            initGame();
+        }
+
+        // بدء اللعبة عند تحميل الصفحة
+        window.onload = function() {
+            initGame();
+        };
     </script>
 </body>
 </html>
