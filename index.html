@@ -1,95 +1,621 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>قائمة المهام</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-        .todo-container {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 5px;
-        }
-        .todo-input {
-            width: 70%;
-            padding: 8px;
-            margin-right: 10px;
-        }
-        .todo-button {
-            padding: 8px 15px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .todo-button:hover {
-            background: #45a049;
-        }
-        .todo-list {
-            list-style: none;
-            padding: 0;
-        }
-        .todo-item {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        .delete-btn {
-            margin-right: 10px;
-            background: #ff4444;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-        .delete-btn:hover {
-            background: #cc0000;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Göğüs Polikliniği Hasta Anketi</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-soft: #111827;
+      --card: rgba(15, 23, 42, 0.9);
+      --ink: #f8fafc;
+      --muted: #94a3b8;
+      --focus: #22d3ee;
+      --accent: #38bdf8;
+      --yes: #16a34a;
+      --no: #dc2626;
+      --mild: #facc15;
+      --mid: #fb923c;
+      --severe: #ef4444;
+      --neutral: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Helvetica Neue", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0%, #020617 60%);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: clamp(12px, 4vw, 32px);
+    }
+
+    .wrap {
+      width: min(980px, 100%);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: clamp(20px, 3vw, 36px);
+    }
+
+    h1 {
+      font-size: clamp(28px, 5vw, 44px);
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: clamp(16px, 3vw, 20px);
+      margin: 0;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 28px;
+      padding: clamp(18px, 4vw, 34px);
+      box-shadow: 0 20px 60px rgba(8, 15, 34, 0.45);
+      backdrop-filter: blur(18px);
+    }
+
+    .group + .group {
+      margin-top: clamp(20px, 4vw, 34px);
+    }
+
+    .question {
+      display: grid;
+      grid-template-columns: auto auto;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: clamp(12px, 3vw, 18px);
+    }
+
+    .question h2 {
+      font-size: clamp(22px, 4vw, 30px);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+    }
+
+    .question button.read {
+      justify-self: end;
+      border: none;
+      border-radius: 16px;
+      padding: 10px 16px;
+      background: var(--accent);
+      color: #031525;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .question button.read span {
+      font-size: 20px;
+    }
+
+    .input-row input {
+      width: 100%;
+      padding: clamp(16px, 4vw, 20px);
+      border-radius: 20px;
+      border: 3px solid transparent;
+      font-size: clamp(18px, 4vw, 22px);
+      font-weight: 600;
+      background: rgba(15, 23, 42, 0.7);
+      color: var(--ink);
+      transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .input-row input:focus {
+      outline: none;
+      border-color: var(--focus);
+      box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.25);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: clamp(16px, 3vw, 22px);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 24px;
+      background: var(--neutral);
+      padding: clamp(18px, 3.5vw, 26px);
+      min-height: 150px;
+      color: var(--ink);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: clamp(12px, 3vw, 18px);
+      font-size: clamp(18px, 3.8vw, 24px);
+      font-weight: 700;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+      position: relative;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn[data-checked="true"] {
+      outline: 5px solid var(--focus);
+      box-shadow: 0 14px 40px rgba(34, 211, 238, 0.35);
+    }
+
+    .btn img {
+      width: clamp(70px, 12vw, 90px);
+      height: clamp(70px, 12vw, 90px);
+      object-fit: contain;
+    }
+
+    .btn small {
+      display: block;
+      font-size: clamp(14px, 3vw, 18px);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .btn.yes { background: linear-gradient(160deg, #22c55e, #15803d); }
+    .btn.no { background: linear-gradient(160deg, #f87171, #dc2626); }
+    .btn.mild { background: linear-gradient(160deg, #facc15, #d97706); color: #1f2937; }
+    .btn.mid { background: linear-gradient(160deg, #fb923c, #f97316); }
+    .btn.severe { background: linear-gradient(160deg, #ef4444, #b91c1c); }
+    .btn.info { background: linear-gradient(160deg, #38bdf8, #0ea5e9); }
+    .btn.soft { background: linear-gradient(160deg, #6366f1, #4338ca); }
+
+    .summary {
+      margin-top: clamp(24px, 4vw, 32px);
+      padding: clamp(18px, 3.5vw, 24px);
+      border-radius: 24px;
+      background: rgba(148, 163, 184, 0.15);
+      display: none;
+    }
+
+    .summary ul {
+      margin: 12px 0 0;
+      padding: 0 0 0 20px;
+      font-size: clamp(16px, 3.2vw, 20px);
+      line-height: 1.6;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: clamp(24px, 4vw, 40px);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    button.send,
+    button.reset {
+      border: none;
+      border-radius: 18px;
+      padding: clamp(14px, 4vw, 18px) clamp(22px, 4.5vw, 30px);
+      font-weight: 800;
+      font-size: clamp(18px, 4vw, 22px);
+      cursor: pointer;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.15s ease;
+    }
+
+    button.send {
+      background: linear-gradient(90deg, #0ea5e9, #14b8a6);
+    }
+
+    button.reset {
+      background: linear-gradient(90deg, #a855f7, #6366f1);
+    }
+
+    button.send:active,
+    button.reset:active {
+      transform: translateY(2px);
+    }
+
+    @media (max-width: 640px) {
+      .question {
+        grid-template-columns: 1fr;
+      }
+
+      .question button.read {
+        justify-self: start;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="todo-container">
-        <h2>قائمة المهام</h2>
-        <div>
-            <input type="text" class="todo-input" placeholder="أضف مهمة جديدة">
-            <button class="todo-button" onclick="addTodo()">إضافة</button>
+  <main class="wrap">
+    <header>
+      <h1>Göğüs Polikliniği Hasta Anketi</h1>
+      <p>Randevu öncesinde lütfen aşağıdaki soruları yanıtlayın. Soruyu dinlemek için hoparlör düğmesine dokunabilirsiniz.</p>
+    </header>
+
+    <section class="card" aria-live="polite">
+      <div class="group">
+        <div class="question">
+          <h2>👤 Adı Soyadı</h2>
+          <button type="button" class="read" data-read="Lütfen adınızı ve soyadınızı söyleyin."><span>🔊</span>Dinle</button>
         </div>
-        <ul class="todo-list" id="todoList"></ul>
-    </div>
+        <div class="input-row">
+          <input id="adSoyad" name="adSoyad" placeholder="Adınızı ve soyadınızı yazınız" autocomplete="name" />
+        </div>
+      </div>
 
-    <script>
-        function addTodo() {
-            const input = document.querySelector('.todo-input');
-            const todoText = input.value.trim();
+      <div class="group">
+        <div class="question">
+          <h2>🗂️ Dosya Numarası</h2>
+          <button type="button" class="read" data-read="Lütfen dosya numaranızı söyleyin."><span>🔊</span>Dinle</button>
+        </div>
+        <div class="input-row">
+          <input id="dosyaNo" name="dosyaNo" placeholder="Dosya numaranızı yazınız" inputmode="numeric" />
+        </div>
+      </div>
 
-            if (todoText !== '') {
-                const todoList = document.getElementById('todoList');
-                const li = document.createElement('li');
-                li.className = 'todo-item';
+      <div class="group">
+        <div class="question">
+          <h2>🤧 Öksürüğünüz var mı?</h2>
+          <button type="button" class="read" data-read="Öksürüğünüz var mı?"><span>🔊</span>Dinle</button>
+        </div>
+        <div class="grid" data-key="Öksürük">
+          <button class="btn yes" data-value="Evet">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='58' fill='%23dcfce7'/%3E%3Cpath fill='%2316a34a' d='M52 82 30 60l8-8 14 14 30-30 8 8-38 38z'/%3E%3C/svg%3E" alt="Evet" />
+            <span>Evet</span>
+            <small>Öksürüğüm var</small>
+          </button>
+          <button class="btn no" data-value="Hayır">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='58' fill='%23fee2e2'/%3E%3Cpath fill='%23dc2626' d='M82 38 68 52l14 14-8 8-14-14-14 14-8-8 14-14-14-14 8-8 14 14 14-14z'/%3E%3C/svg%3E" alt="Hayır" />
+            <span>Hayır</span>
+            <small>Öksürüğüm yok</small>
+          </button>
+        </div>
+      </div>
 
-                li.innerHTML = `
-                    <button class="delete-btn" onclick="this.parentElement.remove()">حذف</button>
-                    <span>${todoText}</span>
-                `;
+      <div class="group">
+        <div class="question">
+          <h2>🟢 Balgamınızın rengi?</h2>
+          <button type="button" class="read" data-read="Balgamınızın rengi nedir?"><span>🔊</span>Dinle</button>
+        </div>
+        <div class="grid" data-key="Balgam Rengi">
+          <button class="btn info" data-value="Şeffaf">
+            <img src="https://img.icons8.com/fluency/96/water.png" alt="Şeffaf" />
+            <span>Şeffaf</span>
+          </button>
+          <button class="btn info" data-value="Beyaz">
+            <img src="https://img.icons8.com/color/96/clouds.png" alt="Beyaz" />
+            <span>Beyaz</span>
+          </button>
+          <button class="btn info" data-value="Sarı">
+            <img src="https://img.icons8.com/color/96/filled-like.png" alt="Sarı" />
+            <span>Sarı</span>
+          </button>
+          <button class="btn info" data-value="Yeşil">
+            <img src="https://img.icons8.com/color/96/leaf.png" alt="Yeşil" />
+            <span>Yeşil</span>
+          </button>
+          <button class="btn info" data-value="Kahverengi">
+            <img src="https://img.icons8.com/color/96/trekking.png" alt="Kahverengi" />
+            <span>Kahverengi</span>
+          </button>
+          <button class="btn info" data-value="Kanlı">
+            <img src="https://img.icons8.com/color/96/blood.png" alt="Kanlı" />
+            <span>Kanlı</span>
+          </button>
+        </div>
+      </div>
 
-                todoList.appendChild(li);
-                input.value = '';
-            }
-        }
+      <div class="group">
+        <div class="question">
+          <h2>😮‍💨 Nefes darlığınızın derecesi?</h2>
+          <button type="button" class="read" data-read="Nefes darlığınızın derecesi nedir?"><span>🔊</span>Dinle</button>
+        </div>
+        <div class="grid" data-key="Dispne">
+          <button class="btn soft" data-value="Yok">
+            <img src="https://img.icons8.com/fluency/96/happy.png" alt="Yok" />
+            <span>Yok</span>
+          </button>
+          <button class="btn mild" data-value="Hafif">
+            <img src="https://img.icons8.com/color/96/moderate-rain.png" alt="Hafif" />
+            <span>Hafif</span>
+          </button>
+          <button class="btn mid" data-value="Orta">
+            <img src="https://img.icons8.com/color/96/tired.png" alt="Orta" />
+            <span>Orta</span>
+          </button>
+          <button class="btn severe" data-value="Şiddetli">
+            <img src="https://img.icons8.com/color/96/sad.png" alt="Şiddetli" />
+            <span>Şiddetli</span>
+          </button>
+        </div>
+      </div>
 
-        // إضافة المهمة بالضغط على Enter
-        document.querySelector('.todo-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                addTodo();
-            }
-        });
-    </script>
+      <div class="group">
+        <div class="question">
+          <h2>💔 Göğüs ağrınız var mı?</h2>
+          <button type="button" class="read" data-read="Göğüs ağrınız var mı?"><span>🔊</span>Dinle</button>
+        </div>
+        <div class="grid" data-key="Göğüs Ağrısı">
+          <button class="btn soft" data-value="Yok">
+            <img src="https://img.icons8.com/color/96/good-quality.png" alt="Yok" />
+            <span>Yok</span>
+          </button>
+          <button class="btn mild" data-value="Bazen">
+            <img src="https://img.icons8.com/color/96/like.png" alt="Bazen" />
+            <span>Bazen</span>
+          </button>
+          <button class="btn severe" data-value="Sık">
+            <img src="https://img.icons8.com/color/96/broken-heart.png" alt="Sık" />
+            <span>Sık</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="question">
+          <h2>🎺 Hırıltı veya ıslık sesi duyuyor musunuz?</h2>
+          <button type="button" class="read" data-read="Hırıltı veya ıslık sesi duyuyor musunuz?"><span>🔊</span>Dinle</button>
+        </div>
+        <div class="grid" data-key="Hırıltı">
+          <button class="btn yes" data-value="Evet">
+            <img src="https://img.icons8.com/color/96/wind.png" alt="Evet" />
+            <span>Evet</span>
+          </button>
+          <button class="btn no" data-value="Hayır">
+            <img src="https://img.icons8.com/fluency/96/no-audio.png" alt="Hayır" />
+            <span>Hayır</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="question">
+          <h2>🌸 Alerjiniz var mı?</h2>
+          <button type="button" class="read" data-read="Alerjiniz var mı?"><span>🔊</span>Dinle</button>
+        </div>
+        <div class="grid" data-key="Alerji">
+          <button class="btn yes" data-value="Evet">
+            <img src="https://img.icons8.com/color/96/flower.png" alt="Evet" />
+            <span>Evet</span>
+          </button>
+          <button class="btn no" data-value="Hayır">
+            <img src="https://img.icons8.com/color/96/sun.png" alt="Hayır" />
+            <span>Hayır</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="question">
+          <h2>🚬 Sigara kullanımınız</h2>
+          <button type="button" class="read" data-read="Sigara kullanıyor musunuz?"><span>🔊</span>Dinle</button>
+        </div>
+        <div class="grid" data-key="Sigara">
+          <button class="btn info" data-value="Hiç">
+            <img src="https://img.icons8.com/color/96/no-smoking.png" alt="Hiç" />
+            <span>Hiç</span>
+          </button>
+          <button class="btn info" data-value="Eskiden">
+            <img src="https://img.icons8.com/color/96/time-machine.png" alt="Eskiden" />
+            <span>Eskiden</span>
+          </button>
+          <button class="btn info" data-value="Şu anda">
+            <img src="https://img.icons8.com/color/96/smoking.png" alt="Şu anda" />
+            <span>Şu anda</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="question">
+          <h2>💊 Kullandığınız ilaçlar</h2>
+          <button type="button" class="read" data-read="Kullandığınız ilaçların isimlerini söyleyin."><span>🔊</span>Dinle</button>
+        </div>
+        <div class="input-row">
+          <input id="ilaclar" name="ilaclar" placeholder="İlaç isimlerini yazınız" />
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="question">
+          <h2>🏥 Daha önce hastanede yattınız mı?</h2>
+          <button type="button" class="read" data-read="Daha önce hastanede yattınız mı?"><span>🔊</span>Dinle</button>
+        </div>
+        <div class="grid" data-key="Hastane Yatışı">
+          <button class="btn yes" data-value="Evet">
+            <img src="https://img.icons8.com/color/96/hospital-room.png" alt="Evet" />
+            <span>Evet</span>
+          </button>
+          <button class="btn no" data-value="Hayır">
+            <img src="https://img.icons8.com/color/96/home.png" alt="Hayır" />
+            <span>Hayır</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="question">
+          <h2>🛡️ Aşılarınızı oldunuz mu?</h2>
+          <button type="button" class="read" data-read="Grip ya da COVID aşılarınızı oldunuz mu?"><span>🔊</span>Dinle</button>
+        </div>
+        <div class="grid" data-key="Aşılar">
+          <button class="btn yes" data-value="Evet">
+            <img src="https://img.icons8.com/color/96/syringe.png" alt="Evet" />
+            <span>Evet</span>
+          </button>
+          <button class="btn no" data-value="Hayır">
+            <img src="https://img.icons8.com/color/96/cancel.png" alt="Hayır" />
+            <span>Hayır</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="question">
+          <h2>👨‍👩‍👧‍👦 Ailenizde akciğer hastalığı var mı?</h2>
+          <button type="button" class="read" data-read="Ailenizde akciğer hastalığı olan var mı?"><span>🔊</span>Dinle</button>
+        </div>
+        <div class="grid" data-key="Aile Öyküsü">
+          <button class="btn yes" data-value="Evet">
+            <img src="https://img.icons8.com/color/96/family.png" alt="Evet" />
+            <span>Var</span>
+          </button>
+          <button class="btn no" data-value="Hayır">
+            <img src="https://img.icons8.com/color/96/checkmark.png" alt="Hayır" />
+            <span>Yok</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="nav">
+        <button class="reset" type="button" id="temizle"><span>🔄</span>Temizle</button>
+        <button class="send" type="button" id="gonder"><span>📨</span>Gönder</button>
+      </div>
+
+      <aside class="summary" id="ozet" aria-live="polite"></aside>
+    </section>
+
+    <form id="gform" action="https://docs.google.com/forms/d/e/FORM_ID/formResponse" method="POST" target="hidden_iframe">
+      <input type="hidden" name="entry.111111" id="f_adSoyad" />
+      <input type="hidden" name="entry.222222" id="f_dosyaNo" />
+      <input type="hidden" name="entry.333333" id="f_oksuruk" />
+      <input type="hidden" name="entry.444444" id="f_balgam" />
+      <input type="hidden" name="entry.555555" id="f_dispne" />
+      <input type="hidden" name="entry.666666" id="f_gogusAgri" />
+      <input type="hidden" name="entry.777777" id="f_hirilti" />
+      <input type="hidden" name="entry.888888" id="f_alerji" />
+      <input type="hidden" name="entry.999999" id="f_sigara" />
+      <input type="hidden" name="entry.121212" id="f_ilaclar" />
+      <input type="hidden" name="entry.131313" id="f_yatis" />
+      <input type="hidden" name="entry.141414" id="f_asilar" />
+      <input type="hidden" name="entry.151515" id="f_aile" />
+      <input type="hidden" name="fvv" value="1" />
+    </form>
+    <iframe name="hidden_iframe" title="hidden" style="display:none"></iframe>
+  </main>
+
+  <script>
+    const selections = {};
+
+    function speak(text) {
+      if (!("speechSynthesis" in window)) {
+        return alert("Cihaz sesli okuma desteklemiyor.");
+      }
+      try {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "tr-TR";
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utterance);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    document.querySelectorAll('.read').forEach((btn) => {
+      btn.addEventListener('click', () => speak(btn.dataset.read));
+    });
+
+    document.querySelectorAll('.grid').forEach((grid) => {
+      grid.addEventListener('click', (event) => {
+        const target = event.target.closest('.btn');
+        if (!target) return;
+
+        grid.querySelectorAll('.btn').forEach((btn) => btn.removeAttribute('data-checked'));
+        target.setAttribute('data-checked', 'true');
+        const key = grid.dataset.key;
+        selections[key] = target.dataset.value;
+      });
+    });
+
+    const hiddenMap = {
+      adSoyad: 'f_adSoyad',
+      dosyaNo: 'f_dosyaNo',
+      'Öksürük': 'f_oksuruk',
+      'Balgam Rengi': 'f_balgam',
+      'Dispne': 'f_dispne',
+      'Göğüs Ağrısı': 'f_gogusAgri',
+      'Hırıltı': 'f_hirilti',
+      'Alerji': 'f_alerji',
+      'Sigara': 'f_sigara',
+      ilaclar: 'f_ilaclar',
+      'Hastane Yatışı': 'f_yatis',
+      'Aşılar': 'f_asilar',
+      'Aile Öyküsü': 'f_aile'
+    };
+
+    function setHiddenValue(id, value) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.value = value ?? '';
+      }
+    }
+
+    function showSummary(data) {
+      const summary = document.getElementById('ozet');
+      const entries = Object.entries(data).filter(([_, value]) => value && value.length > 0);
+      if (!entries.length) {
+        summary.style.display = 'none';
+        summary.innerHTML = '';
+        return;
+      }
+
+      const list = entries
+        .map(([key, value]) => `<li><strong>${key}:</strong> ${value}</li>`)
+        .join('');
+
+      summary.style.display = 'block';
+      summary.innerHTML = `<h3>Özet</h3><ul>${list}</ul>`;
+    }
+
+    document.getElementById('gonder').addEventListener('click', () => {
+      const data = {
+        'Adı Soyadı': document.getElementById('adSoyad').value.trim(),
+        'Dosya Numarası': document.getElementById('dosyaNo').value.trim(),
+        ...selections,
+        'Kullandığınız İlaçlar': document.getElementById('ilaclar').value.trim()
+      };
+
+      setHiddenValue(hiddenMap.adSoyad, data['Adı Soyadı']);
+      setHiddenValue(hiddenMap.dosyaNo, data['Dosya Numarası']);
+      setHiddenValue(hiddenMap['Öksürük'], data['Öksürük']);
+      setHiddenValue(hiddenMap['Balgam Rengi'], data['Balgam Rengi']);
+      setHiddenValue(hiddenMap['Dispne'], data['Dispne']);
+      setHiddenValue(hiddenMap['Göğüs Ağrısı'], data['Göğüs Ağrısı']);
+      setHiddenValue(hiddenMap['Hırıltı'], data['Hırıltı']);
+      setHiddenValue(hiddenMap['Alerji'], data['Alerji']);
+      setHiddenValue(hiddenMap['Sigara'], data['Sigara']);
+      setHiddenValue(hiddenMap.ilaclar, data['Kullandığınız İlaçlar']);
+      setHiddenValue(hiddenMap['Hastane Yatışı'], data['Hastane Yatışı']);
+      setHiddenValue(hiddenMap['Aşılar'], data['Aşılar']);
+      setHiddenValue(hiddenMap['Aile Öyküsü'], data['Aile Öyküsü']);
+
+      document.getElementById('gform').submit();
+      showSummary(data);
+      alert('Yanıtlarınız kaydedildi. Teşekkür ederiz.');
+    });
+
+    document.getElementById('temizle').addEventListener('click', () => {
+      document.getElementById('adSoyad').value = '';
+      document.getElementById('dosyaNo').value = '';
+      document.getElementById('ilaclar').value = '';
+      Object.keys(selections).forEach((key) => delete selections[key]);
+      document.querySelectorAll('.btn').forEach((btn) => btn.removeAttribute('data-checked'));
+      showSummary({});
+    });
+  </script>
 </body>
 </html>
